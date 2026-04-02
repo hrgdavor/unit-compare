@@ -1,0 +1,8 @@
+benchmark.log
+target
+bin
+node_modules
+.idea
+.vscode
+.settings
+test-output

@@ -1,0 +1,27 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Performance Suite" parallel="classes" thread-count="4">
+    <test name="Framework Benchmark">
+        <classes>
+            <class name="hr.hrg.unit.testng.PerformanceTest_01"/>
+            <class name="hr.hrg.unit.testng.PerformanceTest_02"/>
+            <class name="hr.hrg.unit.testng.PerformanceTest_03"/>
+            <class name="hr.hrg.unit.testng.PerformanceTest_04"/>
+            <class name="hr.hrg.unit.testng.PerformanceTest_05"/>
+            <class name="hr.hrg.unit.testng.PerformanceTest_06"/>
+            <class name="hr.hrg.unit.testng.PerformanceTest_07"/>
+            <class name="hr.hrg.unit.testng.PerformanceTest_08"/>
+            <class name="hr.hrg.unit.testng.PerformanceTest_09"/>
+            <class name="hr.hrg.unit.testng.PerformanceTest_10"/>
+            <class name="hr.hrg.unit.testng.PerformanceTest_11"/>
+            <class name="hr.hrg.unit.testng.PerformanceTest_12"/>
+            <class name="hr.hrg.unit.testng.PerformanceTest_13"/>
+            <class name="hr.hrg.unit.testng.PerformanceTest_14"/>
+            <class name="hr.hrg.unit.testng.PerformanceTest_15"/>
+            <class name="hr.hrg.unit.testng.PerformanceTest_16"/>
+            <class name="hr.hrg.unit.testng.PerformanceTest_17"/>
+            <class name="hr.hrg.unit.testng.PerformanceTest_18"/>
+            <class name="hr.hrg.unit.testng.PerformanceTest_19"/>
+            <class name="hr.hrg.unit.testng.PerformanceTest_20"/>
+        </classes>
+    </test>
+</suite>
