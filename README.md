@@ -1,6 +1,6 @@
 # Unit Testing Framework Performance Comparison (CI Simulation)
 
-This project is a multi-module Maven repository designed to benchmark and compare the performance of various unit testing frameworks in a **CI-realistic scenario**. It measures the total process execution time, including framework discovery, setup overhead, and test orchestration.
+Benchmark and compare the performance of various unit testing frameworks in a **CI-realistic scenario**. It measures the total process execution time, including framework discovery, setup overhead, and test orchestration.
 
 ## 🏗️ Project Structure
 
