@@ -4,36 +4,36 @@ import { readFileSync, existsSync, unlinkSync } from "fs";
 
 const frameworks = ["junit5", "testng"];
 const modes = ["discovery", "explicit"];
-const mavenPath  = "D:/programs/mvn/bin/mvn.cmd";
-const mvndPath   = "D:/programs/mvnd/bin/mvnd";
-const javaPath   = "\"C:/Program Files/Java/jdk-21/bin/java.exe\"";
-const rootDir    = "D:/wrk/java/unit-compare";
+const mavenPath = "mvn";
+const mvndPath = "mvnd";
+const javaPath = "java";
+const rootDir = "./";
 const iterations = 3;
 
 const testClasses = Array.from({ length: 20 }, (_, i) => `PerformanceTest_${String(i + 1).padStart(2, '0')}`);
 
 function getClasspath(module) {
     const commonClasses = join(rootDir, "common", "target", "classes");
-    const modClasses    = join(rootDir, module, "target", "classes");
+    const modClasses = join(rootDir, module, "target", "classes");
     const modTestClasses = join(rootDir, module, "target", "test-classes");
-    const libDir        = join(rootDir, module, "target/lib/*");
+    const libDir = join(rootDir, module, "target/lib/*");
     return `${commonClasses};${modClasses};${modTestClasses};${libDir}`;
 }
 
 async function runCommand(cmd, module) {
     const start = performance.now();
     let actualTime = 0;
-    
+
     // Clear previous stat file
     const statFile = join(rootDir, module, "target", "benchmark_wall_clock.txt");
     if (existsSync(statFile)) {
         unlinkSync(statFile);
     }
-    
+
     try {
         const proc = $`${{ raw: cmd }}`.quiet();
         await proc.text(); // Still consume output to wait for completion
-        
+
         // Read actual time from file for robustness
         if (existsSync(statFile)) {
             const content = readFileSync(statFile, "utf-8").trim();
@@ -55,13 +55,13 @@ async function benchmarkFramework(fw, mode) {
     console.log(`\n🚀 Benchmarking ${fw.toUpperCase()} [${mode.toUpperCase()}] (${iterations} iterations)...`);
 
     const results = {
-        maven:  emptyResult(),
-        mvnd:   emptyResult(),
+        maven: emptyResult(),
+        mvnd: emptyResult(),
         direct: emptyResult(),
     };
 
     const pkg = `hr.hrg.unit.${fw}`;
-    const cp  = getClasspath(fw);
+    const cp = getClasspath(fw);
     // Suppress C2 JIT, keep heap small, use parallel GC
     const perfFlags = "-XX:TieredStopAtLevel=1 -Xms256m -Xmx256m -XX:+UseParallelGC";
 
@@ -76,11 +76,11 @@ async function benchmarkFramework(fw, mode) {
 
     for (let i = 1; i <= iterations; i++) {
         // mvn run
-        const mvnRes    = await runCommand(`${mavenPath} test -pl ${fw} -P${mode}`, fw);
+        const mvnRes = await runCommand(`${mavenPath} test -pl ${fw} -P${mode}`, fw);
         results.maven.runs.push(mvnRes);
 
         // mvnd run (warm daemon reused from iteration 2 onwards)
-        const mvndRes   = await runCommand(`${mvndPath} test -pl ${fw} -P${mode}`, fw);
+        const mvndRes = await runCommand(`${mvndPath} test -pl ${fw} -P${mode}`, fw);
         results.mvnd.runs.push(mvndRes);
 
         // Direct Java run
@@ -97,11 +97,11 @@ async function benchmarkFramework(fw, mode) {
     }
 
     const avg = (arr, key) => arr.reduce((a, b) => a + b[key], 0) / arr.length;
-    results.maven.avg        = avg(results.maven.runs,  "total");
-    results.maven.actualAvg  = avg(results.maven.runs,  "actual");
-    results.mvnd.avg         = avg(results.mvnd.runs,   "total");
-    results.mvnd.actualAvg   = avg(results.mvnd.runs,   "actual");
-    results.direct.avg       = avg(results.direct.runs, "total");
+    results.maven.avg = avg(results.maven.runs, "total");
+    results.maven.actualAvg = avg(results.maven.runs, "actual");
+    results.mvnd.avg = avg(results.mvnd.runs, "total");
+    results.mvnd.actualAvg = avg(results.mvnd.runs, "actual");
+    results.direct.avg = avg(results.direct.runs, "total");
     results.direct.actualAvg = avg(results.direct.runs, "actual");
 
     return results;
@@ -133,7 +133,7 @@ async function main() {
         const label = `${item.fw.toUpperCase()} [${item.mode}]`;
 
         const row = (type, r, vsDirectAvg) => {
-            const ovh    = r.avg - r.actualAvg;
+            const ovh = r.avg - r.actualAvg;
             const ovhPct = ((ovh / r.avg) * 100).toFixed(1);
             const vsDirect = vsDirectAvg != null
                 ? `${((r.avg / vsDirectAvg - 1) * 100).toFixed(1)}%`
@@ -142,8 +142,8 @@ async function main() {
         };
 
         const dAvg = res.direct.avg;
-        console.log(row("mvn",    res.maven,  dAvg));
-        console.log(row("mvnd",   res.mvnd,   dAvg));
+        console.log(row("mvn", res.maven, dAvg));
+        console.log(row("mvnd", res.mvnd, dAvg));
         console.log(row("Direct", res.direct, null));
         console.log(SEP);
     }
@@ -151,7 +151,7 @@ async function main() {
     // ─── mvnd daemon gain summary ─────────────────────────────────────────────
     console.log("\n🔥 mvnd Daemon Gain (mvn → mvnd avg savings):");
     for (const item of allResults) {
-        const saved    = item.res.maven.avg - item.res.mvnd.avg;
+        const saved = item.res.maven.avg - item.res.mvnd.avg;
         const savedPct = (saved / item.res.maven.avg * 100).toFixed(1);
         console.log(`  ${`${item.fw.toUpperCase()} [${item.mode}]`.padEnd(22)}: ${saved.toFixed(0).padStart(5)}ms saved  (${savedPct}% reduction)`);
     }

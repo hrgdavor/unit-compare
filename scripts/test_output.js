@@ -1,5 +1,5 @@
 import { $ } from "bun";
-const mavenPath = "D:/programs/mvn/bin/mvn.cmd";
+const mavenPath = "mvn";
 const res = await $`${mavenPath} test -pl junit5 -Pdiscovery`.quiet().text();
 console.log("Output contains RESULT|:", res.includes("RESULT|"));
 if (res.includes("RESULT|")) {

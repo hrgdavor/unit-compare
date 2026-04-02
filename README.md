@@ -4,12 +4,12 @@ Benchmark and compare the performance of various unit testing frameworks in a **
 
 ## 🏗️ Project Structure
 
-- **[unit-compare (Parent)](file:///d:/wrk/java/unit-compare/pom.xml)**: Orchestrates the build.
-- **[common](file:///d:/wrk/java/unit-compare/common/pom.xml)**: Shared utility for internal test timing.
+- **[unit-compare (Parent)](pom.xml)**: Orchestrates the build.
+- **[common](common/pom.xml)**: Shared utility for internal test timing.
 - **Framework Modules**: `junit5` and `testng` all implement identical test logic:
     - **Scale**: **20 test classes per module** (40 total) to amplify discovery and orchestration overhead.
     - **Workload**: 1,000,000 iterations of `Math.sin(i) + Math.cos(i)` per test method.
-- **[benchmark.js](file:///d:/wrk/java/unit-compare/scripts/benchmark.js)**: A Bun script that:
+- **[benchmark.js](scripts/benchmark.js)**: A Bun script that:
     1. Executes `mvn test` for each module multiple times.
     2. Measures **total process execution time** using `performance.now()`.
     3. Calculates averages, cold start (first run), and min/max times.

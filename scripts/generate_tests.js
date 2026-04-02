@@ -7,7 +7,7 @@ const modules = [
     { name: 'testng', pkg: 'hr.hrg.unit.testng', annotations: { setup: '@BeforeMethod', test: '@Test', after: '@AfterClass', staticAfter: false } }
 ];
 
-const root = 'd:/wrk/java/unit-compare';
+const root = './';
 
 for (const mod of modules) {
     const pkgDir = mod.pkg.replace(/\./g, '/');
@@ -19,10 +19,10 @@ for (const mod of modules) {
 
     for (let i = 1; i <= 20; i++) {
         const className = `PerformanceTest_${String(i).padStart(2, '0')}`;
-        const imports = mod.name === 'junit4' ? 'import org.junit.*;' : 
-                        mod.name === 'junit5' ? 'import org.junit.jupiter.api.*;' : 
-                        'import org.testng.annotations.*;';
-        
+        const imports = mod.name === 'junit4' ? 'import org.junit.*;' :
+            mod.name === 'junit5' ? 'import org.junit.jupiter.api.*;' :
+                'import org.testng.annotations.*;';
+
         const content = `package ${mod.pkg};
 ${imports}
 
